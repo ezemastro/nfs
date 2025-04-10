@@ -8,8 +8,13 @@ import { parseToken } from './middlewares/parseToken'
 import { organizationRouter } from './routes/organization'
 import { groupRouter } from './routes/group'
 import { authorizationRouter } from './routes/authorization'
+import morgan from 'morgan'
+import cors from 'cors'
 
 const app = express()
+
+app.use(cors())
+app.use(morgan('dev'))
 app.use(express.json())
 app.use(cookieParser())
 

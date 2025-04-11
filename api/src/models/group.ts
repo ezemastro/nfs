@@ -14,7 +14,7 @@ interface CreateGroupReturn extends ModelReturn {
 }
 export class GroupModel {
   static getGroups = async (organization: string): Promise<GetGroupsReturn> => {
-    const [groups] = await db.query<DbGroup[]>('SELECT * FROM groups WHERE organization = ?', [organization])
+    const [groups] = await db.query<DbGroup[]>('SELECT * FROM `groups` WHERE organization = ?', [organization])
 
     return {
       success: true,
@@ -27,7 +27,7 @@ export class GroupModel {
 
   static createGroup = async ({ name, organization }: CreateGroupParams): Promise<CreateGroupReturn> => {
     const id = randomUUID()
-    await db.query('INSERT INTO groups (id, name, organization) VALUES (?, ?, ?)', [id, name, organization])
+    await db.query('INSERT INTO `groups` (id, name, organization) VALUES (?, ?, ?)', [id, name, organization])
 
     return {
       success: true,

@@ -1,9 +1,23 @@
 import { type Request, type Response } from 'express'
 import { GroupModel } from '../models/group'
+import { parseToken } from '../middlewares/parseToken'
 
 export class GroupController {
   static getGroups = async (req: Request, res: Response) => {
-    const { success, message, groups } = await GroupModel.getGroups(req.user.organization)
+    let organization: string | undefined
+
+    if (req.cookies.token === undefined) {
+      if (req.query.organization === undefined || typeof req.query.organization !== 'string') {
+        res.status(400).json({ message: 'Invalid request' })
+        return
+      }
+      organization = req.query.organization
+    } else {
+      await parseToken(req, res, () => {})
+      organization = req.user.organization
+    }
+
+    const { success, message, groups } = await GroupModel.getGroups(organization)
 
     if (!success) {
       res.status(400).json({ message })

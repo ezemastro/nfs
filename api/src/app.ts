@@ -21,7 +21,7 @@ app.use(cookieParser())
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/organization', organizationRouter)
-app.use('/group', parseToken, groupRouter)
+app.use('/group', groupRouter)
 app.use('/authorization', parseToken, authorizationRouter)
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {

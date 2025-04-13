@@ -12,7 +12,7 @@ interface LoginReturn {
 
 export class AuthModel {
   static async login (userId: string, password: string): Promise<LoginReturn> {
-    const [users] = await db.query<DbFullUser[]>('SELECT u.*, g.name as group_name, o.color , o.logo, o.logo_wxh, o.name as organization_name, o.theme, cd.child as child, ch.id as child_id, ch.`group` as child_group, ch.`type` as child_type, ch.image as child_image, ch.last_name as child_last_name, ch.name as child_name from users u join organizations o on o.id = u.organization join children_dependencies cd on u.id = cd.parent left join `groups` g on g.id = u.`group` left join users ch on cd.child = ch.id where u.id = ?', [userId])
+    const [users] = await db.query<DbFullUser[]>('SELECT u.*, g.name as group_name, o.color , o.logo, o.logo_wxh, o.name as organization_name, o.theme, cd.child as child, ch.id as child_id, ch.`group` as child_group, ch.`type` as child_type, ch.image as child_image, ch.last_name as child_last_name, ch.name as child_name from users u join organizations o on o.id = u.organization left join children_dependencies cd on u.id = cd.parent left join `groups` g on g.id = u.`group` left join users ch on cd.child = ch.id where u.id = ?', [userId])
 
     if (users.length === 0) {
       throw new Error('User not found')

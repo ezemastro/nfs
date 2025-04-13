@@ -91,13 +91,13 @@ export class UserModel {
         organization: user.organization,
         group: child.group
       })),
-      group: user.group === null
+      group: user.group != null
         ? {
             id: user.group,
             name: user.group
           }
         : undefined,
-      image: user.image
+      image: user.image ?? undefined
     }
 
     return { success: true, user: parsedUser }

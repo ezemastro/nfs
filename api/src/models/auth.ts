@@ -21,13 +21,13 @@ export class AuthModel {
     const user = users[0]
 
     // default password
-    if (user.password === undefined) {
+    if (user.password == null) {
       // TODO - Implement default password in first login
-      return { success: false }
-    }
-
-    // compare password
-    if (!await compare(password, user.password)) {
+      if (password !== 'password') {
+        return { success: false }
+      }
+    } else if (!await compare(password, user.password)) {
+      // invalid password
       return {
         success: false,
         message: 'Invalid password'
@@ -65,15 +65,15 @@ export class AuthModel {
         last_name: child.last_name,
         type: child.type,
         organization: user.organization,
-        group: child.group
+        group: child.group ?? undefined
       })),
-      group: user.group === null
+      group: user.group != null
         ? {
             id: user.group,
             name: user.group
           }
         : undefined,
-      image: user.image
+      image: user.image ?? undefined
     }
 
     return { success: true, user: parsedUser, token }

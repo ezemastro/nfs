@@ -17,13 +17,13 @@ interface Group {
 }
 interface RawUser {
   id: UUID
-  password?: string
+  password?: string | null
   name: string
   last_name: string
   type: number
   organization: string
-  group?: string
-  image?: string
+  group?: string | null
+  image?: string | null
 }
 type FlatUser = Omit<RawUser, 'password'>
 interface User {

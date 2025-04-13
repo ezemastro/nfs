@@ -1,5 +1,5 @@
 import { db } from '../services/local_db/db'
-import { type User, type DbUser, type DbOrganization } from '../types/types'
+import { type User, type DbFullUser, type FlatUser } from '../types/types'
 import { compare } from '../utils/hash'
 import { signToken } from '../utils/jwt'
 
@@ -12,7 +12,7 @@ interface LoginReturn {
 
 export class AuthModel {
   static async login (userId: string, password: string): Promise<LoginReturn> {
-    const [users] = await db.query<DbUser[]>('SELECT * FROM users WHERE id = ?', [userId])
+    const [users] = await db.query<DbFullUser[]>('SELECT u.*, g.name as group_name, o.color , o.logo, o.logo_wxh, o.name as organization_name, o.theme, cd.child as child, ch.id as child_id, ch.`group` as child_group, ch.`type` as child_type, ch.image as child_image, ch.last_name as child_last_name, ch.name as child_name from users u join organizations o on o.id = u.organization join children_dependencies cd on u.id = cd.parent left join `groups` g on g.id = u.`group` left join users ch on cd.child = ch.id where u.id = ?', [userId])
 
     if (users.length === 0) {
       throw new Error('User not found')
@@ -41,10 +41,17 @@ export class AuthModel {
       organization: user.organization
     })
 
-    const [organizations] = await db.query<DbOrganization[]>('SELECT * FROM organizations WHERE id = ?', [user.organization])
-    const organization = organizations[0]
-
-    const [children] = await db.query<DbUser[]>('SELECT u.* FROM users u JOIN children_dependencies cd ON u.id = cd.child WHERE cd.parent = ?', [user.id])
+    const children: FlatUser[] = users.map((user) => {
+      return {
+        id: user.child,
+        name: user.child_name,
+        last_name: user.child_last_name,
+        type: user.child_type,
+        organization: user.organization,
+        group: user.child_group ?? undefined,
+        image: user.child_image ?? undefined
+      }
+    })
 
     const parsedUser: User = {
       id: user.id,
@@ -53,20 +60,13 @@ export class AuthModel {
       type: user.type,
       organization: {
         id: user.organization,
-        name: organization.name,
-        logo: organization.logo,
-        theme: organization.theme,
-        color: organization.color,
-        logo_wxh: organization.logo_wxh
+        name: user.organization_name,
+        logo: user.logo,
+        theme: user.theme,
+        color: user.color,
+        logo_wxh: user.logo_wxh
       },
-      children: children.map((child) => ({
-        id: child.id,
-        name: child.name,
-        last_name: child.last_name,
-        type: child.type,
-        organization: user.organization,
-        group: child.group ?? undefined
-      })),
+      children: children.filter((child) => children.findIndex((c) => c.id === child.id) === 0),
       group: user.group != null
         ? {
             id: user.group,

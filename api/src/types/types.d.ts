@@ -72,6 +72,7 @@ interface RawAuthorizationType {
 }
 type UserWithoutOrganization = Omit<User, 'organization'>
 type DbUser = RowDataPacket & RawUser
+type DbFullUser = RowDataPacket & RawUser & Omit<Organization, 'id'> & { child_id: UUID, organization_id: UUID, group_name: string, child_name: string, child_last_name: string, child_image: string, child_type: number, child_group_id: UUID, child_group_name: string }
 type DbOrganization = RowDataPacket & Organization
 type DbGroup = RowDataPacket & Group
 type DbAuthorization = RowDataPacket & MixedAuthorization

@@ -66,7 +66,7 @@ export class AuthModel {
         color: user.color,
         logo_wxh: user.logo_wxh
       },
-      children: children.filter((child) => children.findIndex((c) => c.id === child.id) === 0),
+      children: children.filter((child) => child.id != null && children.findIndex((c) => c.id === child.id) === 0),
       group: user.group != null
         ? {
             id: user.group,

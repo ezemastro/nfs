@@ -12,7 +12,11 @@ module.exports = {
         'react/jsx-uses-react': 'error',
         'react/jsx-uses-vars': 'error',
         'react/jsx-indent': [2, 2, { indentLogicalExpressions: true, checkAttributes: true }],
-        'react/react-in-jsx-scope': 'off'
+        'react/react-in-jsx-scope': 'off',
+        '@typescript-eslint/explicit-function-return-type': 'off',
+        '@typescript-eslint/no-empty-object-type': 'off',
+        '@typescript-eslint/no-wrapper-object-types': 'off',
+        'no-undef': 'off'
       }
     }
   ]

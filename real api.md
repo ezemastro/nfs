@@ -106,6 +106,8 @@ organization (required if not logged in)
 
 # /group
 ## GET /
+### req
+organization ? (can be directly from cookies)
 ### res
 {
   groups: Group[]

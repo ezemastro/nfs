@@ -16,9 +16,9 @@
   0: admin,
   1: orgAdmin,
   2: Authorized org user (preceptor),
-  3: Unauthorized org user (readonly preceptor),
-  4: Parent,
-  5: Child
+  <!-- 3: Unauthorized org user (readonly preceptor), -->
+  3: Parent,
+  4: Child
 }
 ## Organization
 {
